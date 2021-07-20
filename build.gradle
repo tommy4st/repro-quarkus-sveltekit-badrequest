@@ -1,0 +1,47 @@
+plugins {
+  id 'java'
+  id 'io.quarkus'
+  id 'com.github.ben-manes.versions' version '0.39.0'
+}
+
+repositories {
+  //mavenLocal()
+  mavenCentral()
+  maven { url 'https://repository.jboss.org/maven2/' }
+}
+
+dependencies {
+  implementation enforcedPlatform("${quarkusPlatformGroupId}:${quarkusPlatformArtifactId}:${quarkusPlatformVersion}")
+  implementation 'io.quarkus:quarkus-arc'
+  implementation 'io.quarkus:quarkus-config-yaml'
+  implementation 'io.quarkus:quarkus-resteasy'
+  implementation 'io.quarkus:quarkus-resteasy-jackson'
+  implementation 'io.quarkus:quarkus-security'
+  testImplementation 'io.quarkus:quarkus-junit5'
+  testImplementation 'io.rest-assured:rest-assured'
+}
+
+def parsedPackageJson = new groovy.json.JsonSlurper().parseText(file('./package.json').text)
+
+group 'org.itdoesntwork'
+version parsedPackageJson.version + '-SNAPSHOT'
+
+java {
+  sourceCompatibility = JavaVersion.VERSION_11
+  targetCompatibility = JavaVersion.VERSION_11
+}
+
+compileJava {
+  options.encoding = 'UTF-8'
+  options.compilerArgs << '-parameters'
+}
+
+compileTestJava {
+  options.encoding = 'UTF-8'
+}
+
+quarkusBuild {
+  nativeArgs {
+    containerBuild = true
+  }
+}

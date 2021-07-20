@@ -1,0 +1,14 @@
+pluginManagement {
+    repositories {
+        mavenLocal()
+        mavenCentral()
+        gradlePluginPortal()
+    }
+    plugins {
+        id "${quarkusPluginId}" version "${quarkusPluginVersion}"
+    }
+}
+
+def parsedPackageJson = new groovy.json.JsonSlurper().parseText(file('./package.json').text)
+
+rootProject.name=parsedPackageJson.name
